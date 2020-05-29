@@ -1,3 +1,13 @@
+#---------------------------------
+# This script sets out to build a
+# machine learning model on
+# TSLA stock data
+#---------------------------------
+
+#-------------------------------------
+# Author: Trent Henderson, 29 May 2020
+#-------------------------------------
+
 #%%
 import pandas as pd
 import numpy as np
