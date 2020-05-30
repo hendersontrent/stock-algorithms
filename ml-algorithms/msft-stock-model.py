@@ -153,8 +153,8 @@ plt.legend(["Actual data", "Algorithm train", "Algorithm test"])
 plt.xlabel("Time")
 plt.ylabel("Stock price")
 plt.title("LSTM algorithm predictions vs actual data")
-plt.annotate('Train RMSE: %.2f' % (trainScore), xy = (-100,164))
-plt.annotate('Test RMSE: %.2f' % (testScore), xy = (-100,157))
+plt.annotate('Train RMSE: %.2f' % (trainScore), xy = (-350,164))
+plt.annotate('Test RMSE: %.2f' % (testScore), xy = (-350,157))
 
 fmt = '${x:,.0f}'
 tick = mtick.StrMethodFormatter(fmt)
