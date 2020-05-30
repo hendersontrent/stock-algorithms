@@ -36,8 +36,8 @@ from numpy import newaxis
 
 # Load MSFT stock data
 
-tsla = yf.Ticker("MSFT")
-data = tsla.history(period = "max")
+msft = yf.Ticker("MSFT")
+data = msft.history(period = "max")
 
 data.reset_index(level = 0, inplace = True)
 data['Date'] = pd.to_datetime(data['Date'])
