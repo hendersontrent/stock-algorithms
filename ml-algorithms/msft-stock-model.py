@@ -26,6 +26,7 @@ from keras.layers.core import Dense, Activation, Dropout
 from keras.layers.recurrent import LSTM
 from keras.models import Sequential
 from keras.callbacks import EarlyStopping
+from keras.optimizers import Adam
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
@@ -88,16 +89,46 @@ trainX = np.reshape(trainX, (trainX.shape[0], 1, trainX.shape[1]))
 testX = np.reshape(testX, (testX.shape[0], 1, testX.shape[1]))
 
 #%%
+# Determine optimal batch size using highest common factor
+
+def computeHCF(x,y):
+    if x > y:
+        smaller = y
+    else:
+        smaller = x
+    for i in range(1, smaller+1):
+        if((x % i == 0) and (y % i == 0)):
+            hcf = i
+            
+    return hcf
+
+the_batch = computeHCF(trainX.shape[0], testX.shape[0])
+
+#%%
 #-----------------MODEL DEVELOPMENT---------------------
 
 # Create and fit the LSTM network
 
 model = Sequential()
-model.add(LSTM(4, input_shape=(1, look_back)))
+model.add(LSTM(4, input_shape=(1, look_back), dropout = 0.5))
 model.add(Dense(1))
-model.compile(loss='mean_squared_error', optimizer='adam')
-early_stop = EarlyStopping(monitor='loss', patience=2, verbose=1) # Stops after no improvement across 2 epochs
-model.fit(trainX, trainY, epochs=100, batch_size=1, verbose=2, callbacks=[early_stop])
+opt = Adam(learning_rate = 0.1)
+model.compile(loss='mean_squared_error', optimizer= opt)
+early_stop = EarlyStopping(monitor = 'loss', patience = 2, verbose = 1) # Stops after no improvement across 2 epochs
+model.fit(trainX, trainY, epochs = 100, batch_size = the_batch, verbose = 2, callbacks = [early_stop])
+
+#%%
+# Visualise loss
+
+history = model.fit(trainX, trainY, epochs = 100, batch_size = the_batch, verbose = 2, callbacks = [early_stop],
+                    validation_data = (testX, testY))
+plt.plot(history.history['loss'], label = "Train")
+plt.plot(history.history['val_loss'], label = "Validation")
+plt.title('Model train vs validation loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(loc = 'upper right')
+plt.show()
 
 #%%
 trainPredict = model.predict(trainX)
