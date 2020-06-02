@@ -110,10 +110,10 @@ the_batch = computeHCF(trainX.shape[0], testX.shape[0])
 # Create and fit the LSTM network
 
 model = Sequential()
-model.add(LSTM(4, input_shape=(1, look_back), dropout = 0.5))
-model.add(Dense(1))
-opt = Adam(learning_rate = 0.1)
-model.compile(loss='mean_squared_error', optimizer= opt)
+model.add(LSTM(1, input_shape = (1, look_back), dropout = 0.5, activation = 'relu'))
+model.add(Dense(1, activation = 'relu'))
+opt = Adam(learning_rate = 0.01)
+model.compile(loss='mean_squared_error', optimizer= opt, metrics = ['acc'])
 early_stop = EarlyStopping(monitor = 'loss', patience = 2, verbose = 1) # Stops after no improvement across 2 epochs
 model.fit(trainX, trainY, epochs = 100, batch_size = the_batch, verbose = 2, callbacks = [early_stop])
 
